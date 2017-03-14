@@ -1,0 +1,220 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: zouyao
+  Date: 2017/3/6
+  Time: 18:51
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="jsp/gym/js/equipManage.js"></script>
+<%--设施管理--%>
+<div ng-controller="equipManagecontroller">
+    <div class="col-xs-10" style="background-color: #f7f7f7;" id="">
+        <caption>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">设施列表</a>
+                        <div class="navbar-form navbar-left">
+                            <button type="button" class="btn btn-primary" ng-click="addOneEquipmentModal()">
+                                <span class="glyphicon glyphicon-plus"></span>&nbsp;<span>新增设施</span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div>
+                        <form class="navbar-form navbar-right" role="search"  onsubmit="return ;">
+                            <%--<div class="btn-group">
+                                <button type="button" class="btn btn-default"><span ng-bind="scenicSortConst"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">切换下拉菜单</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">全部</a></li>
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从高到低</a></li>&ndash;%&gt;
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由近及远</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由远及近</a></li>&ndash;%&gt;
+                                    <li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)" >按评分从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按评分从高到低</a></li>
+                                </ul>
+                            </div>--%>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入设施名" ng-model="blurName">
+                            </div>
+                            <button type="button" class="btn btn-default" ng-click="getEquipmentInfoListOfEquipment()">
+                                <span class="glyphicon glyphicon-search"></span>&nbsp;<span>搜索</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </caption>
+        <%--设施列表表格--%>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr><th>设施名称</th><th>价格(元)</th><th>描述)</th><th>库存总量</th><th> 使用量</th><th>维修量</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in equipmentList">
+                <td ng-bind="item.equipmentName"></td>
+                <td ng-bind="item.price"></td>
+                <td ng-bind="item.description"></td>
+                <td ng-bind="item.totalNum"></td>
+                <td ng-bind="item.usedNum"></td>
+                <td ng-bind="item.repaireNum"></td>
+                <td>
+                    <button ng-click="editOneEquipmentModal(item)" type="button" class="btn btn-success btn-sm">
+                        <span class="glyphicon glyphicon-edit"></span>&nbsp;<span>编辑</span></button>
+                    <button ng-click="deleteOneEquipmentModal(item)" type="button" class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-remove"></span>&nbsp;<span>删除</span></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-bottom: 20px;"><!--分页bar ng-if则不能给button设置disabled因为ng-if不满足条件不会生成相应dom元素-->
+            <span>
+                <input ng-disabled="currentPage == 1" type="button" ng-click="makePagingList(prevPage)" class="btn btn-default" value={{prevPage}} />&nbsp;
+                <input type="text" disabled style="text-align:center;width:50px;" ng-model="currentPage" />&nbsp;
+                <input ng-disabled="currentPage == totalPage" type="button" ng-click="makePagingList(nextPage)"  class="btn btn-default" value="{{nextPage}}" />&nbsp;
+                <span>共&nbsp;</span>
+                <input type="text" readonly="readonly" style="text-align:center;width:50px;border:none;" ng-model="totalPage" />
+                <span>&nbsp;页</span>
+            </span>
+        </div>
+    </div>
+
+    <%--设施管理模态框部分--%>
+    <!-- 新增设施 模态弹出框 -->
+    <div class="modal fade" id="modalid-eqmng-add">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <!--  >模态弹出窗标题<  -->
+                    <h4 class="modal-title">新增设施</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  >模态弹出窗主体内容<  -->
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">设施名称</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="username" ng-model="add_equipmentName" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">价格(元)</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="tel" ng-model="add_price" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">描述</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="add_description">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">总量</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="add_totalNum">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button ng-disabled="add_equipmentName == '' || add_price == '' ||
+                            add_description == '' || add_totalNum == ''"
+                            type="button" class="btn btn-success" ng-click="addOneEquipment()" data-dismiss="modal">提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 删除确认 模态弹出框-->
+    <div class="modal fade" id="modalid-eqmng-delete">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">提示信息</h4>
+                </div>
+                <div class="modal-body">
+                    <p>确认要删除吗?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteOneEquipment()">确定</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 编辑设施  模态弹出框 -->
+    <div class="modal fade" id="modalid-eqmng-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <!--  >模态弹出窗标题<  -->
+                    <h4 class="modal-title">编辑设施</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  >模态弹出窗主体内容<  -->
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">设施名称</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="username" ng-model="editEquipmentList[0].equipmentName" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">价格(元)</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="tel" ng-model="editEquipmentList[0].price" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">描述</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="editEquipmentList[0].description">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">库存总量</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="editEquipmentList[0].totalNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">已使用量</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="editEquipmentList[0].usedNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">正在维修量</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="editEquipmentList[0].repaireNum">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button ng-disabled="editEquipmentList[0].equipmentName == '' || editEquipmentList[0].price == '' || editEquipmentList[0].description == '' ||
+                            editEquipmentList[0].totalNum == '' || editEquipmentList[0].totalNum < editEquipmentList[0].usedNum ||
+                            editEquipmentList[0].totalNum < editEquipmentList[0].repaireNum"
+                            type="button" class="btn btn-success" ng-click="editOneEquipment()" data-dismiss="modal">提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>

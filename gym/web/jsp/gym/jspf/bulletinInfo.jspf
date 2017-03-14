@@ -1,0 +1,188 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: zouyao
+  Date: 2017/3/6
+  Time: 18:51
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="jsp/gym/js/bulletinInfo.js"></script>
+<%--公告管理--%>
+<div ng-controller="bulletinInfocontroller">
+    <div class="col-xs-10" style="background-color: #f7f7f7;" id="">
+        <%--<caption>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">公告列表</a>
+                        <div class="navbar-form navbar-left">
+                            <button type="button" class="btn btn-primary" ng-click="addOneBulletinModal()">
+                                <span class="glyphicon glyphicon-plus"></span>&nbsp;<span>新增公告</span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div>
+                        <form class="navbar-form navbar-right" role="search"  onsubmit="return ;">
+                            &lt;%&ndash;<div class="btn-group">
+                                <button type="button" class="btn btn-default"><span ng-bind="scenicSortConst"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">切换下拉菜单</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">全部</a></li>
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从高到低</a></li>&ndash;%&gt;
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由近及远</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由远及近</a></li>&ndash;%&gt;
+                                    <li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)" >按评分从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按评分从高到低</a></li>
+                                </ul>
+                            </div>&ndash;%&gt;
+                            &lt;%&ndash;<div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入公告名" ng-model="blurPlayGroundName">
+                            </div>
+                            <button type="button" class="btn btn-default" ng-click="getUserPageList()">
+                                <span class="glyphicon glyphicon-search"></span>&nbsp;<span>搜索</span>
+                            </button>&ndash;%&gt;
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </caption>--%>
+        <%--公告列表面板--%>
+        <div class="panel panel-info">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">最新公告</h3>
+            </div>
+            <div class="panel-body" style="max-height: 600px;overflow: auto;">
+                <%--公告列表--%>
+                <div ng-show="bulletinList.length <= 0"><h3>没有任何公告!</h3></div>
+                <div ng-repeat="item in bulletinList">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading text-center">
+                            <h3 class="panel-title"><span style="font-weight: bold;font-size: 25px;" ng-bind="item.title"></span>
+                            &nbsp;发布时间：<span style="font-style: italic;font-size: 15px;" ng-bind="item.publishTime"></span>
+                            &nbsp;发布人：<span style="font-style: italic;font-size: 15px;" ng-bind="item.user.username"></span>
+                            <%--<button class="btn btn-danger btn-sm pull-right" ng-click="deleteOneBulletinModal(item)">
+                                <span class="glyphicon glyphicon-remove"></span>&nbsp;<span>删除</span>
+                            </button>--%>
+                            <%--<button  style="margin-right: 5px;" class="btn btn-success btn-sm pull-right" ng-click="editOneBulletinModal(item)">
+                                <span class="glyphicon glyphicon-edit"></span>&nbsp;<span>编辑</span>
+                            </button>--%></h3>
+                        </div>
+                        <div class="panel-body">
+                            <p ng-bind="item.content"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%--<div style="margin-bottom: 20px;"><!--分页bar ng-if则不能给button设置disabled因为ng-if不满足条件不会生成相应dom元素-->
+            <span>
+                <input ng-disabled="currentPage == 1" type="button" ng-click="makePagingList(prevPage)" class="btn btn-default" value={{prevPage}} />&nbsp;
+                <input type="text" disabled style="text-align:center;width:50px;" ng-model="currentPage" />&nbsp;
+                <input ng-disabled="currentPage == totalPage" type="button" ng-click="makePagingList(nextPage)"  class="btn btn-default" value="{{nextPage}}" />&nbsp;
+                <span>共&nbsp;</span>
+                <input type="text" readonly="readonly" style="text-align:center;width:50px;border:none;" ng-model="totalPage" />
+                <span>&nbsp;页</span>
+            </span>
+        </div>--%>
+    </div>
+
+    <%--公告管理模态框部分--%>
+    <!-- 新增公告  模态弹出框 -->
+    <div class="modal fade" id="modalid-btmng-add">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <!--  >模态弹出窗标题<  -->
+                    <h4 class="modal-title">新增公告</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  >模态弹出窗主体内容<  -->
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">公告标题</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="username" ng-model="add_title" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">内容</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="email" ng-model="add_content" >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button ng-disabled="add_title == '' || add_content == ''"
+                            type="button" class="btn btn-success" ng-click="addOneBulletin()" data-dismiss="modal">提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 删除确认 模态弹出框-->
+    <div class="modal fade" id="modalid-btmng-delete">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">提示信息</h4>
+                </div>
+                <div class="modal-body">
+                    <p>确认要删除吗?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteOneBulletin()">确定</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 编辑公告  模态弹出框 -->
+    <%--<div class="modal fade" id="modalid-btmng-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <!--  >模态弹出窗标题<  -->
+                    <h4 class="modal-title">编辑公告</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  >模态弹出窗主体内容<  -->
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">公告标题</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="username" ng-model="editPlayGroundList[0].playgroundName" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">内容</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="email" ng-model="editPlayGroundList[0].size" >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button ng-disabled="editPlayGroundList[0].playgroundName == '' || editPlayGroundList[0].size == '' || editPlayGroundList[0].price == '' ||
+                            editPlayGroundList[0].position == '' || editPlayGroundList[0].description == ''"
+                            type="button" class="btn btn-success" ng-click="editOnePlayground()" data-dismiss="modal">提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->--%>
+
+</div>

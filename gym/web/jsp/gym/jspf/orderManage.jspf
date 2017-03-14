@@ -1,0 +1,214 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: zouyao
+  Date: 2017/3/6
+  Time: 18:51
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="jsp/gym/js/orderManage.js"></script>
+<%--预约管理--%>
+<div ng-controller="orderManagecontroller">
+    <div class="col-xs-10" style="background-color: #f7f7f7;" id="">
+        <caption>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">预约列表</a>
+                    </div>
+                    <div>
+                        <form class="navbar-form navbar-right" role="search"  onsubmit="return ;">
+                            <%--<div class="btn-group">
+                                <button type="button" class="btn btn-default"><span ng-bind="scenicSortConst"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">切换下拉菜单</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">全部</a></li>
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从高到低</a></li>&ndash;%&gt;
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由近及远</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由远及近</a></li>&ndash;%&gt;
+                                    <li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)" >按评分从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按评分从高到低</a></li>
+                                </ul>
+                            </div>--%>
+                            <%--<div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入用户名" ng-model="blurUserName">
+                            </div>
+                            <button type="button" class="btn btn-default" ng-click="getUserPageList()">
+                                <span class="glyphicon glyphicon-search"></span>&nbsp;<span>搜索</span>
+                            </button>--%>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </caption>
+        <%--预约列表表格--%>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr><th>场地名称</th><th>场地详情</th><th>用户详情</th><th>开始时间</th><th>结束时间</th><th>预约时间</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in orderList">
+                <td ng-bind="item.playground.playgroundName"></td>
+                <td>
+                    <button ng-click="viewDetailOfPlayGrd(item.playground)" type="button" class="btn btn-info btn-sm">
+                        <span class="glyphicon glyphicon-hand-up"></span>&nbsp;<span>查看详情</span></button>
+                </td>
+                <td>
+                    <button ng-click="viewDetailOfUser(item.user)" type="button" class="btn btn-info btn-sm">
+                        <span class="glyphicon glyphicon-hand-up"></span>&nbsp;<span ng-bind="item.user.username"></span></button>
+                </td>
+                <td ng-bind="item.startTime"></td>
+                <td ng-bind="item.endTime"></td>
+                <td ng-bind="item.orderTime"></td>
+                <td>
+                    <button ng-click="deleteOneOrderModal(item)" type="button" class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-remove"></span>&nbsp;<span>删除</span>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-bottom: 20px;"><!--分页bar ng-if则不能给button设置disabled因为ng-if不满足条件不会生成相应dom元素-->
+            <span>
+                <input type="button" ng-disabled="currentPage == 1" ng-click="makePagingList(prevPage)" class="btn btn-default" value={{prevPage}} />&nbsp;
+                <input type="text" disabled style="text-align:center;width:50px;" ng-model="currentPage" />&nbsp;
+                <input type="button" ng-disabled="currentPage == totalPage" ng-click="makePagingList(nextPage)"  class="btn btn-default" value="{{nextPage}}" />&nbsp;
+                <span>共&nbsp;</span>
+                <input type="text" readonly="readonly" style="text-align:center;width:50px;border:none;" ng-model="totalPage" />
+                <span>&nbsp;页</span>
+            </span>
+        </div>
+    </div>
+
+    <%--预约管理模态框部分--%>
+    <!-- 查看场地  模态弹出框 -->
+    <div class="modal fade" id="modalid-odmng-view">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <!--  >模态弹出窗标题<  -->
+                    <h4 class="modal-title">场地详情</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  >模态弹出窗主体内容<  -->
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">场地名称</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" name="username" ng-model="viewDetailOfPlayGrdTemp.playgroundName" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">大小</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" name="email" ng-model="viewDetailOfPlayGrdTemp.size" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">价格(元)</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" name="tel" ng-model="viewDetailOfPlayGrdTemp.price" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">位置</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" ng-model="viewDetailOfPlayGrdTemp.position">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-2 control-label">描述</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" ng-model="viewDetailOfPlayGrdTemp.description">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 查看用户详情  模态弹出框 -->
+    <div class="modal fade" id="modalid-order-viewUser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <!--  >模态弹出窗标题<  -->
+                    <h4 class="modal-title">用户信息</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  >模态弹出窗主体内容<  -->
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-9">
+                                <input type="text" disabled class="form-control" ng-model="viewDetailOfUserTemp.username">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电话</label>
+                            <div class="col-sm-9">
+                                <input type="text" disabled class="form-control" ng-model="viewDetailOfUserTemp.tel">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-9">
+                                <input type="text" disabled class="form-control" ng-model="viewDetailOfUserTemp.email">
+                            </div>
+                        </div>
+                        <%--<div class="form-group">
+                            <label class="col-sm-2 control-label">状态</label>
+                            <div class="col-sm-9">
+                                <input type="text" disabled class="form-control" ng-model="viewDetailOfUserTemp.isDelete">
+                            </div>
+                        </div>--%>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">注册时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" disabled class="form-control" ng-model="viewDetailOfUserTemp.createTime">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 删除确认 模态弹出框-->
+    <div class="modal fade" id="modalid-odmng-delete">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">提示信息</h4>
+                </div>
+                <div class="modal-body">
+                    <p>确认要删除吗?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteOneOrder()">确定</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>

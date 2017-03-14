@@ -1,0 +1,201 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: zouyao
+  Date: 2017/3/6
+  Time: 11:09
+  To change this template use File | Settings | File Templates.
+-->
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="jsp/examination/js/simulationExam.js"></script>
+<%--模拟考试--%>
+<div ng-controller="simulationExamcontroller">
+
+    <div class="col-xs-10" style="background-color: #f7f7f7;" ng-show="initInfoShow == 0">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">考生信息</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入姓名" ng-model="stuName">
+                    </div>
+                </div>
+                <br/><br/>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">准考证号</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入准考证号" ng-model="stuNumber">
+                    </div>
+                </div>
+                <br/><br/>
+                <div style="width:105px;margin:0 auto;align-content: center;">
+                    <button class="btn btn-primary btn-lg" ng-click="startExam()">开始考试</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-10" style="background-color: #f7f7f7;" id="" ng-show="initInfoShow == 1">
+        <caption>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">模拟考试</a>
+                    </div>
+                    <div>
+                        <form class="navbar-form navbar-right" role="search"  onsubmit="return ;">
+                            <button type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-time"></span>&nbsp;<span>离考试结束还剩：&nbsp;</span>
+                                <span id="myTime"></span>
+                                <%--<span ng-bind="time_m"></span>:<span ng-bind="time_s"></span>--%>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </caption>
+        <%--模拟考试面板--%>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">当前第&nbsp;<span ng-bind="currentPage"></span>&nbsp;题&nbsp;&nbsp;
+                    &nbsp;<span style="font-style: italic;" ng-bind="questionBankArray[currentPage-1].title"></span>
+                    <span ng-if="questionBankArray[currentPage-1].title == '选择题'">(单选)</span>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    <span style="text-indent: 2em;" ng-bind="questionBankArray[currentPage-1].description"></span>
+                </p>
+                <div ng-if="questionBankArray[currentPage-1].remark != '无'">
+                    <img ng-src="{{questionBankArray[currentPage-1].remark}}" alt=""/>
+                </div>
+                <div ng-show="questionBankArray[currentPage-1].title == '判断题'">
+                    <div class="radio">
+                        <label>
+                            <input class="inputid-pan-a"  type="radio" name="optionsRadios" value="a" style="cursor:pointer;" ng-click="checkBox($event)">
+                            &nbsp;A.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemA"></span>
+                            <span ng-show="checkBoxArray[currentPage-1] == 'a'">*</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input class="inputid-pan-b" type="radio" name="optionsRadios" value="b" style="cursor:pointer;" ng-click="checkBox($event)">
+                            &nbsp;B.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemB"></span>
+                            <span ng-show="checkBoxArray[currentPage-1] == 'b'">*</span>
+                        </label>
+                    </div>
+                    <%--<p><label><input id="inputid-pan-a" type="checkbox" value="a" style="cursor:pointer;" ng-click="checkBoxs($event,questionBankArray[currentPage-1].itemA)">&nbsp;A.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemA"></span></label></p>
+                    <p><label><input id="inputid-pan-b"  type="checkbox" value="b" style="cursor:pointer;" ng-click="checkBoxs($event,questionBankArray[currentPage-1].itemB)">&nbsp;B.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemB"></span></label></p>--%>
+                </div>
+                <div ng-show="questionBankArray[currentPage-1].title == '选择题'">
+                    <div class="radio">
+                        <label>
+                            <input class="inputid-xuan-a"  type="radio" name="optionsRadios" value="a" style="cursor:pointer;" ng-click="checkBox($event)">
+                            &nbsp;A.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemA"></span>
+                            <span ng-show="checkBoxArray[currentPage-1] == 'a'">*</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input class="inputid-xuan-b"  type="radio" name="optionsRadios" value="b" style="cursor:pointer;" ng-click="checkBox($event)">
+                            &nbsp;B.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemB"></span>
+                            <span ng-show="checkBoxArray[currentPage-1] == 'b'">*</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input class="inputid-xuan-c"  type="radio" name="optionsRadios" value="c" style="cursor:pointer;" ng-click="checkBox($event)">
+                            &nbsp;C.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemC"></span>
+                            <span ng-show="checkBoxArray[currentPage-1] == 'c'">*</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input class="inputid-xuan-d"  type="radio" name="optionsRadios" value="d" style="cursor:pointer;" ng-click="checkBox($event)">
+                            &nbsp;D.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemD"></span>
+                            <span ng-show="checkBoxArray[currentPage-1] == 'd'">*</span>
+                        </label>
+                    </div>
+                    <%--<p><label><input id="inputid-xuan-a"  type="checkbox" value="a" style="cursor:pointer;" ng-click="checkBoxs($event,questionBankArray[currentPage-1].itemA)">&nbsp;A.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemA"></span></label></p>
+                    <p><label><input id="inputid-xuan-b" type="checkbox" value="b" style="cursor:pointer;" ng-click="checkBoxs($event,questionBankArray[currentPage-1].itemB)">&nbsp;B.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemB"></span></label></p>
+                    <p><label><input id="inputid-xuan-c" type="checkbox" value="c" style="cursor:pointer;" ng-click="checkBoxs($event,questionBankArray[currentPage-1].itemC)">&nbsp;C.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemC"></span></label></p>
+                    <p><label><input id="inputid-xuan-d" type="checkbox" value="d" style="cursor:pointer;" ng-click="checkBoxs($event,questionBankArray[currentPage-1].itemD)">&nbsp;D.&nbsp;<span ng-bind="questionBankArray[currentPage-1].itemD"></span></label></p>--%>
+                </div>
+
+                <div style="width:105px;margin:0 auto;align-content: center;">
+                    <%--<button class="btn btn-warning" ng-click="collectQuestion()">
+                        <span class="glyphicon glyphicon-star-empty"></span>&nbsp;<span>收藏</span>
+                    </button>
+                    <button class="btn btn-success" ng-click="checkAnswer()">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span>提交</span>
+                    </button>--%>
+                    <button ng-show="submitPaper == 1 || checkBoxArray.length == 20" class="btn btn-info btn-lg" ng-click="checkAnswer()">
+                        <span class="glyphicon glyphicon-ok"></span>&nbsp;<span>交卷</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <%--<div class="alert alert-success" ng-show="answerType == 0">&lt;%&ndash;回答正确与错误提示&ndash;%&gt;
+            &lt;%&ndash;<a href="#" class="close" data-dismiss="alert">
+                &times;
+            </a>&ndash;%&gt;
+            <strong>回答正确！</strong>
+        </div>
+        <div class="alert alert-warning" ng-show="answerType == 1">&lt;%&ndash;回答正确与错误提示&ndash;%&gt;
+            &lt;%&ndash;<a href="#" class="close" data-dismiss="alert">
+                &times;
+            </a>&ndash;%&gt;
+            <strong>回答错误！</strong>
+            <button style="margin-top: -2px;" class="btn btn-warning" ng-click="showAnswerKeys()">
+                <span class="glyphicon glyphicon-tasks"></span>&nbsp;<span>答案解析&nbsp;</span>
+                <span ng-show="showAnswer == -1" class="glyphicon glyphicon-arrow-down"></span>
+                <span ng-show="showAnswer == 0" class="glyphicon glyphicon-arrow-up"></span>
+            </button>
+            <div ng-show="showAnswer == 0">
+                <p>正确答案：<span ng-bind="questionBankArray[currentPage-1].rightAnswer | uppercase"></span></p>
+               <p ng-bind="questionBankArray[currentPage-1].answerKeys"></p>
+            </div>
+        </div>--%>
+        <div style="margin-bottom: 20px;"><!--分页bar ng-if则不能给button设置disabled因为ng-if不满足条件不会生成相应dom元素-->
+            <span ng-show="true">
+            <input ng-disabled="currentPage == 1 || submitPaper == 1" type="button" id="btnid-prevpage" ng-click="makePagingList(prevPage)" class="btn btn-default" value={{prevPage}} />&nbsp;
+            <input type="text" disabled style="text-align:center;width:50px;" ng-model="currentPage" />&nbsp;
+            <input ng-disabled="currentPage == totalPage || submitPaper == 1" type="button" id="btnid-nextpage" ng-click="makePagingList(nextPage)"  class="btn btn-default" value="{{nextPage}}" />&nbsp;
+            <span>共&nbsp;</span>
+            <input type="text" readonly="readonly" style="text-align:center;width:50px;border:none;" ng-model="totalPage" />
+            <span>&nbsp;题</span>
+        </span>
+        </div>
+    </div>
+
+    <!-- 交卷结果 模态弹出框-->
+    <div class="modal fade" id="modalid-result-se">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">考试结束</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">成绩统计</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>共 20 道，共答对&nbsp;<span ng-bind="count"></span>&nbsp;道题</p>
+                            <p>请再接再厉</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="addExamRecordToDB()" data-dismiss="modal">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
+
+

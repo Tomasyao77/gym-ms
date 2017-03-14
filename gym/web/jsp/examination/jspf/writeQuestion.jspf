@@ -1,0 +1,153 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: zouyao
+  Date: 2017/3/6
+  Time: 11:09
+  To change this template use File | Settings | File Templates.
+-->
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="jsp/examination/js/writeQuestion.js"></script>
+<%--题库录入--%>
+<div ng-controller="writeQuestioncontroller">
+    <div class="col-xs-10" style="background-color: #f7f7f7;" id="">
+        <caption>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">题库录入</a>
+                    </div>
+                    <div>
+                        <%--<form class="navbar-form navbar-right" role="search"  onsubmit="return ;">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default"><span ng-bind="scenicSortConst"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">切换下拉菜单</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">全部</a></li>
+                                    <li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)" >按评分从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按评分从高到低</a></li>
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入景区名" ng-model="blurScenicName">
+                            </div>
+                            <button type="button" class="btn btn-default" ng-click="getScenicPageList()">
+                                <span class="glyphicon glyphicon-search"></span>&nbsp;<span>搜索</span>
+                            </button>
+                        </form>--%>
+                    </div>
+                </div>
+            </nav>
+        </caption>
+        <%--题库录入面板--%>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">题库录入</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入题目种类" ng-model="title">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">description</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入题目描述" ng-model="description">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">itemA</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入A选项" ng-model="itemA">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">itemB</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入B选项" ng-model="itemB">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">itemC</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入C选项" ng-model="itemC">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">itemD</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入D选项" ng-model="itemD">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">rightAnswer</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入正确答案" ng-model="rightAnswer">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">answerKeys</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入答案解析" ng-model="answerKeys">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">chapter</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入所属章节" ng-model="chapter">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">type</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入所属类别" ng-model="type">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">remark</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="请输入备注（图片路径）" ng-model="remark">
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-success" ng-click="addToQuestionBank()">提交</button>
+                    <button class="btn btn-default" ng-click="resetWrite()">重置</button>
+                </div>
+            </div>
+        </div>
+        <%--<div class="alert alert-success">&lt;%&ndash;回答正确与错误提示&ndash;%&gt;
+            &lt;%&ndash;<a href="#" class="close" data-dismiss="alert">
+                &times;
+            </a>&ndash;%&gt;
+            <strong>回答正确！</strong>
+        </div>
+        <div class="alert alert-warning">&lt;%&ndash;回答正确与错误提示&ndash;%&gt;
+            &lt;%&ndash;<a href="#" class="close" data-dismiss="alert">
+                &times;
+            </a>&ndash;%&gt;
+            <strong>回答错误！</strong>
+            <button style="margin-top: -2px;" class="btn btn-warning">答案解析</button>
+        </div>--%>
+        <%--<div style="margin-bottom: 20px;"><!--分页bar ng-if则不能给button设置disabled因为ng-if不满足条件不会生成相应dom元素-->
+            <span ng-show="true">
+            <input ng-disabled="currentPage == 1" type="button" id="btnid-prevpage" ng-click="makePagingList(prevPage)" class="btn btn-default" value={{prevPage}} />&nbsp;
+            <input type="text" disabled style="text-align:center;width:50px;" ng-model="currentPage" />&nbsp;
+            <input ng-disabled="currentPage == totalPage" type="button" id="btnid-nextpage" ng-click="makePagingList(nextPage)"  class="btn btn-default" value="{{nextPage}}" />&nbsp;
+            <span>共&nbsp;</span>
+            <input type="text" readonly="readonly" style="text-align:center;width:50px;border:none;" ng-model="totalPage" />
+            <span>&nbsp;题</span>
+        </span>
+        </div>--%>
+    </div>
+
+
+
+</div>
+
+

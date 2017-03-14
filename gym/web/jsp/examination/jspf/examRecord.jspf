@@ -1,0 +1,90 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: zouyao
+  Date: 2017/3/6
+  Time: 11:09
+  To change this template use File | Settings | File Templates.
+-->
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="jsp/examination/js/examRecord.js"></script>
+<%--考试记录--%>
+<div ng-controller="examRecordcontroller">
+    <div class="col-xs-10" style="background-color: #f7f7f7;" id="">
+        <%--<caption>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">考试记录</a>
+                    </div>
+                    <div>
+                        &lt;%&ndash;<form class="navbar-form navbar-right" role="search"  onsubmit="return ;">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default"><span ng-bind="scenicSortConst"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">切换下拉菜单</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">全部</a></li>
+                                    <li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)" >按评分从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按评分从高到低</a></li>
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入景区名" ng-model="blurScenicName">
+                            </div>
+                            <button type="button" class="btn btn-default" ng-click="getScenicPageList()">
+                                <span class="glyphicon glyphicon-search"></span>&nbsp;<span>搜索</span>
+                            </button>
+                        </form>&ndash;%&gt;
+                    </div>
+                </div>
+            </nav>
+        </caption>--%>
+        <%--考试记录面板--%>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">考试记录</h3>
+            </div>
+            <div class="panel-body">
+                <div style="align-content: center" ng-show="examList.length <= 0">
+                    <h3>暂时没有考试记录!快去模拟考试吧!</h3>
+                </div>
+                <table class="table table-hover table-striped" ng-show="examList.length > 0">
+                    <thead>
+                    <tr><th>记录日期</th><th>考试人</th><th>分数</th><th>考试花费时间(分钟)</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in examList">
+                        <td ng-bind="item.examTime"></td>
+                        <td ng-bind="usernameOfLoger"></td>
+                        <td ng-bind="item.score"></td>
+                        <td ng-bind="item.duration"></td>
+                        <td>
+                            <button ng-click="deleteOneRecord(item)" type="button" class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove"></span>&nbsp;<span>删除</span></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="margin-bottom: 20px;" ng-show="examList.length > 0"><!--分页bar ng-if则不能给button设置disabled因为ng-if不满足条件不会生成相应dom元素-->
+            <span ng-show="true">
+            <input ng-disabled="currentPage == 1" type="button" id="btnid-prevpage" ng-click="makePagingList(prevPage)" class="btn btn-default" value={{prevPage}} />&nbsp;
+            <input type="text" disabled style="text-align:center;width:50px;" ng-model="currentPage" />&nbsp;
+            <input ng-disabled="currentPage == totalPage" type="button" id="btnid-nextpage" ng-click="makePagingList(nextPage)"  class="btn btn-default" value="{{nextPage}}" />&nbsp;
+            <span>共&nbsp;</span>
+            <input type="text" readonly="readonly" style="text-align:center;width:50px;border:none;" ng-model="totalPage" />
+            <span>&nbsp;页</span>
+        </span>
+        </div>
+    </div>
+
+    <%--考试记录模态框部分--%>
+
+</div>
+
+

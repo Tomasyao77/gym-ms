@@ -1,0 +1,162 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: zouyao
+  Date: 2017/3/6
+  Time: 18:51
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="jsp/gym/js/addOrder.js"></script>
+<%--新增预约--%>
+<div ng-controller="addOrdercontroller">
+    <div class="col-xs-10" style="background-color: #f7f7f7;" id="">
+        <caption>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">新增预约</a>
+                        <%--<div class="navbar-form navbar-left">
+                            <button type="button" class="btn btn-primary" ng-click="addOneBulletinModal()">
+                                <span class="glyphicon glyphicon-plus"></span>&nbsp;<span>新增公告</span>
+                            </button>
+                        </div>--%>
+                    </div>
+                    <%--<div class="btn-group navbar-form navbar-right">
+                        <button type="button" class="btn btn-default" ng-click="changeBtnGroupStatus(btnGroupConstRef[0])">
+                            <span ng-show="btnGroupStatus == 0" class="glyphicon glyphicon-arrow-down"></span>&nbsp;<span ng-bind="btnGroupConstRef[0]"></span>
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="changeBtnGroupStatus(btnGroupConstRef[1])">
+                            <span ng-show="btnGroupStatus == 1" class="glyphicon glyphicon-arrow-down"></span>&nbsp;<span ng-bind="btnGroupConstRef[1]"></span>
+                        </button>
+                    </div>--%>
+                    <div>
+                        <form class="navbar-form navbar-right" role="search"  onsubmit="return ;">
+                            <%--<div class="btn-group">
+                                <button type="button" class="btn btn-default"><span ng-bind="scenicSortConst"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">切换下拉菜单</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">全部</a></li>
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按价格从高到低</a></li>&ndash;%&gt;
+                                    &lt;%&ndash;<li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由近及远</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按时间由远及近</a></li>&ndash;%&gt;
+                                    <li class="divider"></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)" >按评分从低到高</a></li>
+                                    <li><a style="cursor: pointer;" ng-click="scenicSortConstFunc($event)">按评分从高到低</a></li>
+                                </ul>
+                            </div>--%>
+                            <%--<div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入公告名" ng-model="blurPlayGroundName">
+                            </div>
+                            <button type="button" class="btn btn-default" ng-click="getUserPageList()">
+                                <span class="glyphicon glyphicon-search"></span>&nbsp;<span>搜索</span>
+                            </button>--%>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </caption>
+        <%--新增预约面板--%>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">预约信息填写</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-offset-2 control-label">场地名称</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" ng-change="chooseOnePlayGrd(selectedItem)" ng-init="selectedItem = playGroundList[0].playgroundName"
+                                    style="max-height: 200px;" ng-model="selectedItem" ng-options="item.playgroundName for item in playGroundList"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-offset-2 control-label">开始时间</label>
+                        <div class="col-sm-6">
+                                <div class="input-append date" id="datetimepicker" data-date="2017-3-13" data-date-format="yyyy-mm-dd hh:ii">
+                                    <input class="span2 form-control" size="16" type="text" placeholder="点击选择">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                        </div>
+                        <script>
+                            $('#datetimepicker').datetimepicker()
+                                    .on('changeDate',function(ev){
+                                        console.log(ev.date.valueOf());
+                                        $('#datetimepicker').datetimepicker('hide');
+                                        /*var datestr = new Date(parseInt(ev.date.valueOf()));
+                                         var temstr = datestr.getFullYear() + "年" + (parseInt(datestr.getMonth())+1) + "月" + datestr.getDate() + "日"
+                                         + datestr.getHours() + ":" + datestr.getMinutes() + ":" + datestr.getSeconds()
+                                         ;*/
+                                        dateChooseArray[0] = new Date(parseInt(ev.date.valueOf()));
+                                    });
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-offset-2 control-label">结束时间</label>
+                        <div class="col-sm-6">
+                            <div class="input-append date" id="datetimepicker01" data-date="2017-3-13" data-date-format="yyyy-mm-dd hh:ii">
+                                <input class="span2 form-control" size="16" type="text" placeholder="点击选择">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                        </div>
+                        <script>
+                            $('#datetimepicker01').datetimepicker()
+                                    .on('changeDate',function(ev){
+                                        console.log(ev.date.valueOf());
+                                        $('#datetimepicker01').datetimepicker('hide');
+                                        /*var datestr = new Date(parseInt(ev.date.valueOf()));
+                                        var temstr = datestr.getFullYear() + "年" + (parseInt(datestr.getMonth())+1) + "月" + datestr.getDate() + "日"
+                                                        + datestr.getHours() + ":" + datestr.getMinutes() + ":" + datestr.getSeconds()
+                                                ;*/
+                                        dateChooseArray[1] = new Date(parseInt(ev.date.valueOf()));
+                                    });
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-offset-2 control-label">申请人</label>
+                        <div class="col-sm-6">
+                            <input type="text" disabled class="form-control" name="email" ng-model="usernameOfLoger" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <%--<label class="col-sm-2 col-sm-offset-2 control-label">结束时间</label>--%>
+                        <div class="col-sm-2 col-sm-offset-4">
+                            <button class="btn btn-success" ng-click="addToOrder()">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <%--<div class="panel panel-danger" ng-show="btnGroupStatus == 1">
+            <div class="panel-heading">
+                <h3 class="panel-title">预约信息</h3>
+            </div>
+            <div class="panel-body">
+                这是一个基本的面板
+            </div>
+        </div>--%>
+
+        <%--<div style="margin-bottom: 20px;"><!--分页bar ng-if则不能给button设置disabled因为ng-if不满足条件不会生成相应dom元素-->
+            <span>
+                <input ng-disabled="currentPage == 1" type="button" ng-click="makePagingList(prevPage)" class="btn btn-default" value={{prevPage}} />&nbsp;
+                <input type="text" disabled style="text-align:center;width:50px;" ng-model="currentPage" />&nbsp;
+                <input ng-disabled="currentPage == totalPage" type="button" ng-click="makePagingList(nextPage)"  class="btn btn-default" value="{{nextPage}}" />&nbsp;
+                <span>共&nbsp;</span>
+                <input type="text" readonly="readonly" style="text-align:center;width:50px;border:none;" ng-model="totalPage" />
+                <span>&nbsp;页</span>
+            </span>
+        </div>--%>
+    </div>
+
+    <%--新增预约模态框部分--%>
+
+</div>
